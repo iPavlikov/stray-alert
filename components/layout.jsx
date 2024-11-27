@@ -76,7 +76,7 @@ export function Layout() {
   ];
 
   const apiUrl =
-    'https://api-maps.yandex.ru/v3/?apikey=8bcaaabb-8495-476d-a4a3-352bac46437d&lang=ru_RU';
+    'https://api-maps.yandex.ru/v3/?apikey=23ff3afe-b331-4b48-8a5a-87cdb5308875&lang=ru_RU';
 
   return (
     <div className="flex h-screen bg-background">
