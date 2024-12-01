@@ -26,54 +26,13 @@ import {
 } from 'lucide-react';
 import { MapProvider } from '@/providers/map-provider';
 import { Map } from '@/modules/map';
+import { RecentReports } from '@/modules/recent-reports';
+import { PLACES } from '@/data/places';
 
 export function Layout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-
-  const recentReports = [
-    {
-      id: 1,
-      type: 'Lost',
-      petName: 'Max',
-      breed: 'Golden Retriever',
-      lastSeen: '2 hours ago',
-      image: '/placeholder.svg?height=40&width=40',
-    },
-    {
-      id: 2,
-      type: 'Found',
-      petName: 'Luna',
-      breed: 'Siamese Cat',
-      lastSeen: '1 day ago',
-      image: '/placeholder.svg?height=40&width=40',
-    },
-    {
-      id: 3,
-      type: 'Lost',
-      petName: 'Charlie',
-      breed: 'Labrador',
-      lastSeen: '3 hours ago',
-      image: '/placeholder.svg?height=40&width=40',
-    },
-    {
-      id: 4,
-      type: 'Found',
-      petName: 'Bella',
-      breed: 'Persian Cat',
-      lastSeen: '5 hours ago',
-      image: '/placeholder.svg?height=40&width=40',
-    },
-    {
-      id: 5,
-      type: 'Lost',
-      petName: 'Rocky',
-      breed: 'German Shepherd',
-      lastSeen: '1 day ago',
-      image: '/placeholder.svg?height=40&width=40',
-    },
-  ];
 
   const apiUrl =
     'https://api-maps.yandex.ru/v3/?apikey=23ff3afe-b331-4b48-8a5a-87cdb5308875&lang=ru_RU';
@@ -92,7 +51,7 @@ export function Layout() {
               isSidebarOpen ? 'block' : 'hidden'
             }`}
           >
-            Stray Alert
+            Найди питомца
           </h1>
           <Button
             variant="ghost"
@@ -100,26 +59,18 @@ export function Layout() {
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             <Menu className="h-6 w-6" />
-            <span className="sr-only">Toggle sidebar</span>
+            <span className="sr-only">Переключить боковое меню</span>
           </Button>
         </div>
         <nav className="flex-1">
           <Button variant="ghost" className="w-full justify-start p-4">
             <MapPin className="h-5 w-5 mr-2" />
-            {isSidebarOpen && <span>Map</span>}
+            {isSidebarOpen && <span>Карта</span>}
           </Button>
-          <Button variant="ghost" className="w-full justify-start p-4">
-            <Search className="h-5 w-5 mr-2" />
-            {isSidebarOpen && <span>Search</span>}
-          </Button>
-          <Button variant="ghost" className="w-full justify-start p-4">
+          {/* <Button variant="ghost" className="w-full justify-start p-4">
             <Bell className="h-5 w-5 mr-2" />
-            {isSidebarOpen && <span>Alerts</span>}
-          </Button>
-          <Button variant="ghost" className="w-full justify-start p-4">
-            <MessageCircle className="h-5 w-5 mr-2" />
-            {isSidebarOpen && <span>Messages</span>}
-          </Button>
+            {isSidebarOpen && <span>Уведомления</span>}
+          </Button> */}
         </nav>
         <div className="p-4">
           <div className="flex items-center space-x-4">
@@ -129,19 +80,13 @@ export function Layout() {
             </Avatar>
             {isSidebarOpen && (
               <div>
-                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-sm font-medium">Маша Павликова</p>
                 <p className="text-xs text-muted-foreground">
                   john@example.com
                 </p>
               </div>
             )}
           </div>
-          {isSidebarOpen && (
-            <Button variant="ghost" className="w-full justify-start mt-4">
-              <Settings className="h-5 w-5 mr-2" />
-              Settings
-            </Button>
-          )}
         </div>
       </aside>
       {/* Main content area */}
@@ -149,10 +94,10 @@ export function Layout() {
         {/* Header */}
         <header className="bg-background border-b p-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Stray Alert Map</h2>
+            <h2 className="text-2xl font-bold">Карта</h2>
             <div className="flex items-center space-x-4">
-              <Button variant="outline">Report Lost Pet</Button>
-              <Button>Report Found Pet</Button>
+              <Button variant="outline">Заявить о пропаже</Button>
+              <Button>Заявить о находке</Button>
             </div>
           </div>
         </header>
@@ -165,7 +110,7 @@ export function Layout() {
                 <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="text"
-                  placeholder="Search for lost or found pets..."
+                  placeholder="Найти объявления"
                   className="pl-10"
                 />
               </div>
@@ -175,46 +120,45 @@ export function Layout() {
               onClick={() => setIsFiltersOpen(!isFiltersOpen)}
             >
               <Filter className="h-4 w-4 mr-2" />
-              Filters
+              Фильтры
             </Button>
           </div>
           {isFiltersOpen && (
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="pet-type">Pet Type</Label>
+                <Label htmlFor="pet-type">Питомец</Label>
                 <Select>
                   <SelectTrigger id="pet-type">
-                    <SelectValue placeholder="Select pet type" />
+                    <SelectValue placeholder="Выберите питомца" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="dog">Dog</SelectItem>
-                    <SelectItem value="cat">Cat</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="dog">Собака</SelectItem>
+                    <SelectItem value="cat">Кошка</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="status">Status</Label>
+                <Label htmlFor="status">Тип объявления</Label>
                 <Select>
                   <SelectTrigger id="status">
-                    <SelectValue placeholder="Select status" />
+                    <SelectValue placeholder="Выберите тип" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="lost">Lost</SelectItem>
-                    <SelectItem value="found">Found</SelectItem>
+                    <SelectItem value="lost">Пропал</SelectItem>
+                    <SelectItem value="found">Нашелся</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <Label htmlFor="date-range">Date Range</Label>
+                <Label htmlFor="date-range">Дата объявления</Label>
                 <Select>
                   <SelectTrigger id="date-range">
-                    <SelectValue placeholder="Select date range" />
+                    <SelectValue placeholder="Выберите дату объявления" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="today">Today</SelectItem>
-                    <SelectItem value="week">Last 7 days</SelectItem>
-                    <SelectItem value="month">Last 30 days</SelectItem>
+                    <SelectItem value="today">Сегодня</SelectItem>
+                    <SelectItem value="week">Последние 7 дней</SelectItem>
+                    <SelectItem value="month">Последние 30 дней</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -223,9 +167,14 @@ export function Layout() {
         </div>
 
         {/* Map area */}
-        <MapProvider apiUrl={apiUrl}>
-          <Map />
-        </MapProvider>
+        <div className="flex-1 relative">
+          {/* Replace this div with an actual map component */}
+          <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
+            <MapProvider apiUrl={apiUrl}>
+              <Map places={PLACES} />
+            </MapProvider>
+          </div>
+        </div>
 
         {/* Hideable bottom drawer */}
         <div
@@ -238,7 +187,7 @@ export function Layout() {
             className="w-full h-12 flex items-center justify-center"
             onClick={() => setIsDrawerOpen(!isDrawerOpen)}
           >
-            <span className="mr-2">Recent Stray Reports</span>
+            <span className="mr-2">Недавние объявления</span>
             {isDrawerOpen ? (
               <ChevronDown className="h-4 w-4" />
             ) : (
@@ -247,27 +196,7 @@ export function Layout() {
           </Button>
           {isDrawerOpen && (
             <ScrollArea className="h-52">
-              <div className="p-4 space-y-4">
-                {recentReports.map((report) => (
-                  <div key={report.id} className="flex items-center space-x-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage
-                        src={report.image}
-                        alt={`${report.petName}'s photo`}
-                      />
-                      <AvatarFallback>{report.petName[0]}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">
-                        {report.type}: {report.petName}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {report.breed}, last seen {report.lastSeen}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <RecentReports />
             </ScrollArea>
           )}
         </div>

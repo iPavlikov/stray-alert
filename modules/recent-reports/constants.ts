@@ -1,0 +1,42 @@
+export const RECENT_REPORTS = [
+  {
+    id: 1,
+    type: 'lost',
+    petName: 'Бобик',
+    breed: 'Золотой ретривер',
+    lastSeen: '2 часа назад',
+    image: '/placeholder.svg?height=40&width=40',
+  },
+  {
+    id: 2,
+    type: 'found',
+    petName: 'Мурзик',
+    breed: 'Сиамский кот',
+    lastSeen: '1 день назад',
+    image: '/placeholder.svg?height=40&width=40',
+  },
+  {
+    id: 3,
+    type: 'lost',
+    petName: 'Шарик',
+    breed: 'Лабрадор',
+    lastSeen: '3 часа назад',
+    image: '/placeholder.svg?height=40&width=40',
+  },
+  {
+    id: 4,
+    type: 'found',
+    petName: 'Белла',
+    breed: 'Персидская кошка',
+    lastSeen: '5 часов назад',
+    image: '/placeholder.svg?height=40&width=40',
+  },
+  {
+    id: 5,
+    type: 'lost',
+    petName: 'Тузик',
+    breed: 'Немецкая овчарка',
+    lastSeen: '1 день назад',
+    image: '/placeholder.svg?height=40&width=40',
+  },
+];

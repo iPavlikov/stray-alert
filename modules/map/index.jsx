@@ -1,32 +1,51 @@
 'use client';
 
 import { useMap } from '@/providers/map-provider';
+import { useRef, useState } from 'react';
+import { useDebouncedCallback } from 'use-debounce';
+import MarkerWithPopup from './marker-with-popup';
 
-export const Map = () => {
+const DEFAULT_LOCATION = { center: [37.6173, 55.7558], zoom: 9 };
+
+export const Map = ({ places }) => {
+  const mapRef = useRef(null);
+  const [selectedPlaceId, setSelectedPlaceId] = useState(null);
+  const [location, setLocation] = useState(DEFAULT_LOCATION);
   const { reactifyApi } = useMap();
 
-  if (!reactifyApi)
-    return (
-      <div className="flex-1 relative">
-        {/* Replace this div with an actual map component */}
-        <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-          <p className="text-2xl text-gray-600">Stray Alert Interactive Map</p>
-        </div>
-      </div>
-    );
+  const debouncedSetLocation = useDebouncedCallback(setLocation, 500);
 
-  const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer } =
-    reactifyApi;
+  if (!reactifyApi)
+    return <p className="text-2xl text-gray-600">Загрузка карты...</p>;
+
+  const {
+    YMap,
+    YMapListener,
+    YMapDefaultSchemeLayer,
+    YMapDefaultFeaturesLayer,
+  } = reactifyApi;
 
   return (
-    <div className="flex-1 relative">
-      <div className="absolute top-0 right-0 bottom-0 left-0 inset-0 bg-gray-200 flex items-center justify-center">
-        <YMap location={{ center: [37.6173, 55.7558], zoom: 9 }}>
-          {/* Add a map scheme layer */}
-          <YMapDefaultSchemeLayer />
-          <YMapDefaultFeaturesLayer />
-        </YMap>
-      </div>
-    </div>
+    <YMap location={location} ref={mapRef}>
+      {/* Add a map scheme layer */}
+      <YMapDefaultSchemeLayer />
+      <YMapDefaultFeaturesLayer />
+
+      <YMapListener
+        onUpdate={({ location }) => {
+          debouncedSetLocation(location);
+        }}
+      />
+
+      {places.map((place) => (
+        <MarkerWithPopup
+          key={place.id}
+          place={place}
+          mapRef={mapRef}
+          selected={selectedPlaceId === place.id}
+          selectPlace={setSelectedPlaceId}
+        />
+      ))}
+    </YMap>
   );
 };
