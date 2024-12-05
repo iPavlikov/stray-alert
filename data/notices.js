@@ -1,19 +1,29 @@
-export const RECENT_REPORTS = [
+// export const NOTICES = [
+//   [37.34204440950727, 56.04785018702136],
+//   [38.500545705915606, 55.187530758015846],
+//   [37.06738620638225, 55.85367530400972],
+//   [38.32257419466352, 55.85830988519754],
+//   [37.023440893882274, 55.52475698166306],
+//   [37.707061659273904, 55.558618711600225],
+//   [37.113799940523904, 55.23034108804907],
+// ]
+
+export const NOTICES = [
   {
-    id: 1,
     type: 'lost',
     petName: 'Бобик',
     breed: 'Золотой ретривер',
     lastSeen: '2 часа назад',
     image: '/placeholder.svg?height=40&width=40',
+    location: [37.34204440950727, 56.04785018702136],
   },
   {
-    id: 2,
     type: 'found',
     petName: 'Мурзик',
     breed: 'Сиамский кот',
     lastSeen: '1 день назад',
     image: '/placeholder.svg?height=40&width=40',
+    location: [38.500545705915606, 55.187530758015846],
   },
   {
     id: 3,
@@ -22,6 +32,7 @@ export const RECENT_REPORTS = [
     breed: 'Лабрадор',
     lastSeen: '3 часа назад',
     image: '/placeholder.svg?height=40&width=40',
+    location: [37.06738620638225, 55.85367530400972],
   },
   {
     id: 4,
@@ -30,6 +41,7 @@ export const RECENT_REPORTS = [
     breed: 'Персидская кошка',
     lastSeen: '5 часов назад',
     image: '/placeholder.svg?height=40&width=40',
+    location: [38.32257419466352, 55.85830988519754],
   },
   {
     id: 5,
@@ -38,5 +50,11 @@ export const RECENT_REPORTS = [
     breed: 'Немецкая овчарка',
     lastSeen: '1 день назад',
     image: '/placeholder.svg?height=40&width=40',
+    location: [37.023440893882274, 55.52475698166306],
   },
-];
+].map(({ location: [longitude, latitude], ...notice }, i) => ({
+  id: `${i}`,
+  ...notice,
+  longitude,
+  latitude,
+}));

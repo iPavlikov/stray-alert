@@ -3,6 +3,7 @@
 import { useMap } from '@/providers/map-provider';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { getPopupPosition } from './helpers/get-popup-position';
+import { Report } from '../recent-reports/report';
 
 const MarkerWithPopup = ({ mapRef, place, selected, selectPlace }) => {
   const markerRef = useRef(null);
@@ -49,11 +50,11 @@ const MarkerWithPopup = ({ mapRef, place, selected, selectPlace }) => {
           className="absolute bottom-0 transform -translate-x-1/2 flex flex-col items-center"
         >
           <div
-            className={`text-white whitespace-nowrap py-1 px-2 rounded text-sm shadow ${
+            className={`text-white whitespace-nowrap py-2 px-2 rounded-lg text-sm shadow ${
               selected ? 'bg-slate-600' : 'bg-slate-700'
             }`}
           >
-            {place.label}
+            {place.petName}
           </div>
         </div>
         {selected ? (
@@ -62,9 +63,8 @@ const MarkerWithPopup = ({ mapRef, place, selected, selectPlace }) => {
             className="absolute transform -translate-x-1/2 transition-opacity"
             style={{ ...position }}
           >
-            <div className="bg-slate-700 text-slate-300 min-w-[320px] p-4 rounded-lg text-sm shadow w-full h-full">
-              <div className="text-lg text-white">{place.label}</div>
-              <div className="text-sm">{place.text}</div>
+            <div className="bg-background min-w-[320px] p-4 rounded-lg text-sm shadow w-full h-full">
+              <Report report={place} />
             </div>
           </div>
         ) : null}

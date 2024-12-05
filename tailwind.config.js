@@ -55,6 +55,9 @@ const config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      spacing: {
+        90: '22.5rem',
+      },
     },
   },
   plugins: [require('tailwindcss-animate')],

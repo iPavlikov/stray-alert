@@ -27,7 +27,6 @@ export const Map = ({ places }) => {
 
   return (
     <YMap location={location} ref={mapRef}>
-      {/* Add a map scheme layer */}
       <YMapDefaultSchemeLayer />
       <YMapDefaultFeaturesLayer />
 
