@@ -16,13 +16,30 @@ import { Search, Filter } from 'lucide-react';
 import { MapProvider } from '@/providers/map-provider';
 import { Map } from '@/modules/map';
 import { RecentReports } from '@/modules/recent-reports';
-import { NOTICES } from '@/data/notices';
+import { ReportLost } from '@/modules/report-lost';
+import { useReports } from '@/modules/report-lost/api';
 
 const apiUrl =
   'https://api-maps.yandex.ru/v3/?apikey=23ff3afe-b331-4b48-8a5a-87cdb5308875&lang=ru_RU';
 
 export function Layout() {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+
+  const [search, setSearch] = useState('');
+  const [petType, setPetType] = useState('');
+  const [noticeType, setNoticeType] = useState('');
+
+  const handleSearchChange = (e) => {
+    const { value } = e.target;
+
+    setSearch(value);
+  };
+
+  const { data, isLoading } = useReports({
+    'pet-type': petType,
+    'notice-type': noticeType,
+    search,
+  });
 
   return (
     <div className="flex h-screen bg-background">
@@ -32,7 +49,7 @@ export function Layout() {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Найди питомца</h2>
             <div className="flex items-center space-x-4">
-              <Button variant="outline">Заявить о пропаже</Button>
+              <ReportLost />
               <Button>Заявить о находке</Button>
             </div>
           </div>
@@ -48,6 +65,8 @@ export function Layout() {
                   type="text"
                   placeholder="Найти объявления"
                   className="pl-10"
+                  value={search}
+                  onChange={handleSearchChange}
                 />
               </div>
             </div>
@@ -63,7 +82,7 @@ export function Layout() {
             <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <Label htmlFor="pet-type">Питомец</Label>
-                <Select>
+                <Select onValueChange={setPetType} defaultValue={petType}>
                   <SelectTrigger id="pet-type">
                     <SelectValue placeholder="Выберите питомца" />
                   </SelectTrigger>
@@ -75,7 +94,7 @@ export function Layout() {
               </div>
               <div>
                 <Label htmlFor="status">Тип объявления</Label>
-                <Select>
+                <Select onValueChange={setNoticeType} defaultValue={noticeType}>
                   <SelectTrigger id="status">
                     <SelectValue placeholder="Выберите тип" />
                   </SelectTrigger>
@@ -107,7 +126,7 @@ export function Layout() {
           <div className="flex-1 relative">
             <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
               <MapProvider apiUrl={apiUrl}>
-                <Map places={NOTICES} />
+                <Map isLoading={isLoading} places={data} />
               </MapProvider>
             </div>
           </div>
@@ -115,7 +134,7 @@ export function Layout() {
           {/* Боковое меню */}
           <aside className="w-90">
             <ScrollArea className="h-full">
-              <RecentReports reports={NOTICES} />
+              <RecentReports isLoading={isLoading} reports={data} />
             </ScrollArea>
           </aside>
         </div>
