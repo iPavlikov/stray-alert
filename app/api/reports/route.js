@@ -1,3 +1,5 @@
+import { readFile } from '@/lib/server-utils';
+
 export async function GET(req) {
   const searchParams = req.nextUrl.searchParams;
 
@@ -7,7 +9,8 @@ export async function GET(req) {
   const search = searchParams.get('search');
   // const lastSeen = searchParams.get('last-seen');
 
-  let { default: notices } = await import('@/data/notices.json');
+  const fileContent = await readFile('notices.json');
+  let notices = JSON.parse(fileContent);
 
   if (petType) {
     notices = notices.filter((n) => n.petType === petType);

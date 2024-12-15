@@ -3,28 +3,18 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Search, Filter } from 'lucide-react';
 import { MapProvider } from '@/providers/map-provider';
+import { Filters } from '@/modules/filters';
 import { Map } from '@/modules/map';
 import { RecentReports } from '@/modules/recent-reports';
-import { ReportLost } from '@/modules/report-lost';
-import { useReports } from '@/modules/report-lost/api';
+import { ReportDialog } from '@/modules/report';
+import { useReports } from '@/modules/report/api';
+import { useDebounce } from 'use-debounce';
 
 const apiUrl =
   'https://api-maps.yandex.ru/v3/?apikey=23ff3afe-b331-4b48-8a5a-87cdb5308875&lang=ru_RU';
 
 export function Layout() {
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
-
   const [search, setSearch] = useState('');
   const [petType, setPetType] = useState('');
   const [noticeType, setNoticeType] = useState('');
@@ -35,10 +25,12 @@ export function Layout() {
     setSearch(value);
   };
 
+  const [debouncedSearch] = useDebounce(search, 500);
+
   const { data, isLoading } = useReports({
     'pet-type': petType,
     'notice-type': noticeType,
-    search,
+    search: debouncedSearch,
   });
 
   return (
@@ -49,79 +41,38 @@ export function Layout() {
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold">Найди питомца</h2>
             <div className="flex items-center space-x-4">
-              <ReportLost />
-              <Button>Заявить о находке</Button>
+              <ReportDialog
+                type="lost"
+                title="Заявить о пропаже"
+                description="Заполните информацию о потерявшемся питомце."
+              >
+                <Button variant="outline" type="button">
+                  Заявить о пропаже
+                </Button>
+              </ReportDialog>
+
+              <ReportDialog
+                type="found"
+                title="Заявить о находке"
+                description="Заполните информацию о найденном питомце."
+              >
+                <Button>Заявить о находке</Button>
+              </ReportDialog>
             </div>
           </div>
         </header>
 
         {/* Поиск и фильтры */}
-        <div className="bg-background p-4 border-b">
-          <div className="flex items-center space-x-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  type="text"
-                  placeholder="Найти объявления"
-                  className="pl-10"
-                  value={search}
-                  onChange={handleSearchChange}
-                />
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-            >
-              <Filter className="h-4 w-4 mr-2" />
-              Фильтры
-            </Button>
-          </div>
-          {isFiltersOpen && (
-            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <Label htmlFor="pet-type">Питомец</Label>
-                <Select onValueChange={setPetType} defaultValue={petType}>
-                  <SelectTrigger id="pet-type">
-                    <SelectValue placeholder="Выберите питомца" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="dog">Собака</SelectItem>
-                    <SelectItem value="cat">Кошка</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="status">Тип объявления</Label>
-                <Select onValueChange={setNoticeType} defaultValue={noticeType}>
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Выберите тип" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="lost">Пропал</SelectItem>
-                    <SelectItem value="found">Нашелся</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="date-range">Дата объявления</Label>
-                <Select>
-                  <SelectTrigger id="date-range">
-                    <SelectValue placeholder="Выберите дату объявления" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="today">Сегодня</SelectItem>
-                    <SelectItem value="week">Последние 7 дней</SelectItem>
-                    <SelectItem value="month">Последние 30 дней</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          )}
-        </div>
+        <Filters
+          search={search}
+          petType={petType}
+          noticeType={noticeType}
+          onSearchChange={handleSearchChange}
+          onPetTypeChange={setPetType}
+          onNoticeTypeChange={setNoticeType}
+        />
 
-        <div className="flex flex-grow">
+        <div className="flex flex-grow min-h-0">
           {/* Карта */}
           <div className="flex-1 relative">
             <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
