@@ -25,7 +25,11 @@ export const Report = memo(({ report }) => {
   return (
     <div className="flex items-center space-x-4">
       <Avatar className="h-12 w-12">
-        <AvatarImage src={report.image} alt={`Фото ${report.petName}`} />
+        <AvatarImage
+          className="object-cover"
+          src={report.photo}
+          alt={`Фото ${report.petName}`}
+        />
         <AvatarFallback>{report.petName[0]}</AvatarFallback>
       </Avatar>
       <div>

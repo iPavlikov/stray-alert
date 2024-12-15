@@ -10,6 +10,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import { FileUpload } from '@/components/ui/file-upload';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -28,11 +29,12 @@ import { createNotice } from './actions';
 
 const schema = z.object({
   type: z.enum(['found', 'lost']),
-  petName: z.string(),
-  petType: z.string(),
-  breed: z.string(),
-  lastSeen: z.string(),
-  address: z.string(),
+  petName: z.string().min(2),
+  petType: z.string().min(2),
+  breed: z.string().min(2),
+  photo: z.string().min(2),
+  lastSeen: z.string().min(1),
+  address: z.string().min(3),
 });
 
 const resolver = zodResolver(schema);
@@ -41,6 +43,7 @@ const initialFormValues = {
   petName: '',
   petType: '',
   breed: '',
+  photo: '',
   lastSeen: '',
   address: '',
 };
@@ -133,6 +136,24 @@ export const ReportDialog = ({ children, description, title, type }) => {
               name="breed"
               render={({ field }) => (
                 <Input id="breed" className="col-span-3" {...field} />
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="photo" className="text-right">
+              Фото
+            </Label>
+            <Controller
+              control={form.control}
+              name="photo"
+              render={({ field: { onChange } }) => (
+                <FileUpload
+                  accept="image/png, image/jpeg, image/webp"
+                  id="photo"
+                  type="file"
+                  className="col-span-3"
+                  onValueChange={onChange}
+                />
               )}
             />
           </div>

@@ -18,7 +18,7 @@ export const createNotice = async (values) => {
       petType: values.petType,
       breed: values.breed,
       lastSeen: values.lastSeen,
-      image: '/placeholder.svg?height=40&width=40',
+      photo: values.photo,
       location: [37.06738620638225, 55.85367530400972],
     };
     const data = [...savedData, notice];
