@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { DATE_FORMAT_STRING } from '@/lib/constants';
-import { formatDistanceToNow, parse } from 'date-fns';
+import { computed } from '@/lib/utils';
+import { formatDistanceToNow, isToday, isYesterday, parse } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { memo } from 'react';
 
@@ -11,9 +12,14 @@ export const Report = memo(({ report }) => {
     DATE_FORMAT_STRING,
     new Date()
   );
-  const lastSeenText = formatDistanceToNow(parsedLastSeenDate, {
-    addSuffix: true,
-    locale: ru,
+  const lastSeenText = computed(() => {
+    if (isToday(parsedLastSeenDate)) return 'сегодня';
+    if (isYesterday(parsedLastSeenDate)) return 'вчера';
+
+    return formatDistanceToNow(parsedLastSeenDate, {
+      addSuffix: true,
+      locale: ru,
+    });
   });
 
   return (
