@@ -10,7 +10,7 @@ export const createNotice = async (values) => {
     const savedData = JSON.parse(fileContent);
     const lastId = savedData.at(-1)?.id;
 
-    const id = typeof lastId === 'number' ? lastId + 1 : 0;
+    const id = typeof lastId === 'number' ? lastId + 1 : 1;
     const notice = {
       id,
       type: values.type,

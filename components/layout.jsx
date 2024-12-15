@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { MapProvider } from '@/providers/map-provider';
@@ -9,6 +8,8 @@ import { Map } from '@/modules/map';
 import { RecentReports } from '@/modules/recent-reports';
 import { ReportDialog } from '@/modules/report';
 import { useReports } from '@/modules/report/api';
+import { format, startOfDay, subMonths, subWeeks } from 'date-fns';
+import { useMemo, useState } from 'react';
 import { useDebounce } from 'use-debounce';
 
 const apiUrl =
@@ -18,6 +19,7 @@ export function Layout() {
   const [search, setSearch] = useState('');
   const [petType, setPetType] = useState('');
   const [noticeType, setNoticeType] = useState('');
+  const [lastSeen, setLastSeen] = useState('');
 
   const handleSearchChange = (e) => {
     const { value } = e.target;
@@ -26,11 +28,37 @@ export function Layout() {
   };
 
   const [debouncedSearch] = useDebounce(search, 500);
+  const lastSeenDateString = useMemo(() => {
+    const now = new Date();
+    let lastSeenDate;
+
+    switch (lastSeen) {
+      case 'today': {
+        lastSeenDate = startOfDay(now);
+        break;
+      }
+      case 'week': {
+        lastSeenDate = subWeeks(now, 1);
+        break;
+      }
+      case 'month': {
+        lastSeenDate = subMonths(now, 1);
+        break;
+      }
+      default: {
+        lastSeenDate = '';
+        break;
+      }
+    }
+
+    return lastSeenDate && format(lastSeenDate, 'yyyy-MM-dd');
+  }, [lastSeen]);
 
   const { data, isLoading } = useReports({
     'pet-type': petType,
     'notice-type': noticeType,
     search: debouncedSearch,
+    'last-seen': lastSeenDateString,
   });
 
   return (
@@ -67,9 +95,11 @@ export function Layout() {
           search={search}
           petType={petType}
           noticeType={noticeType}
+          lastSeen={lastSeen}
           onSearchChange={handleSearchChange}
           onPetTypeChange={setPetType}
           onNoticeTypeChange={setNoticeType}
+          onLastSeenChange={setLastSeen}
         />
 
         <div className="flex flex-grow min-h-0">

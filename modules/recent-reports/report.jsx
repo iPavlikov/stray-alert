@@ -1,8 +1,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { DATE_FORMAT_STRING } from '@/lib/constants';
+import { formatDistanceToNow, parse } from 'date-fns';
+import { ru } from 'date-fns/locale';
 import { memo } from 'react';
 
 export const Report = memo(({ report }) => {
   const type = report.type === 'lost' ? 'Потерялся' : 'Нашелся';
+  const parsedLastSeenDate = parse(
+    report.lastSeen,
+    DATE_FORMAT_STRING,
+    new Date()
+  );
+  const lastSeenText = formatDistanceToNow(parsedLastSeenDate, {
+    addSuffix: true,
+    locale: ru,
+  });
 
   return (
     <div className="flex items-center space-x-4">
@@ -16,7 +28,7 @@ export const Report = memo(({ report }) => {
         </p>
         <p className="text-sm text-muted-foreground">{report.breed}</p>
         <p className="text-sm text-muted-foreground">
-          Последний раз видели {report.lastSeen}
+          Последний раз видели {lastSeenText}
         </p>
       </div>
     </div>

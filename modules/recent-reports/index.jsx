@@ -5,7 +5,7 @@ export const RecentReports = memo(({ isLoading, reports }) => {
   if (isLoading)
     return <div className="p-4 text-center">Загрузка объявлений...</div>;
 
-  if (!reports)
+  if (!reports?.length)
     return <div className="p-4 text-center">Объявлений не найдено</div>;
 
   return (

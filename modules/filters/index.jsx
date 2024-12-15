@@ -15,9 +15,11 @@ export const Filters = ({
   search,
   petType,
   noticeType,
+  lastSeen,
   onSearchChange,
   onPetTypeChange,
   onNoticeTypeChange,
+  onLastSeenChange,
 }) => {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
@@ -47,9 +49,9 @@ export const Filters = ({
       {isFiltersOpen && (
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
-            <Label htmlFor="pet-type">Питомец</Label>
+            <Label htmlFor="filter-pet-type">Питомец</Label>
             <Select onValueChange={onPetTypeChange} defaultValue={petType}>
-              <SelectTrigger id="pet-type">
+              <SelectTrigger id="filter-pet-type">
                 <SelectValue placeholder="Выберите питомца" />
               </SelectTrigger>
               <SelectContent>
@@ -59,12 +61,13 @@ export const Filters = ({
             </Select>
           </div>
           <div>
-            <Label htmlFor="status">Тип объявления</Label>
+            <Label htmlFor="filter-status">Тип объявления</Label>
             <Select
+              value={noticeType}
               onValueChange={onNoticeTypeChange}
               defaultValue={noticeType}
             >
-              <SelectTrigger id="status">
+              <SelectTrigger id="filter-status">
                 <SelectValue placeholder="Выберите тип" />
               </SelectTrigger>
               <SelectContent>
@@ -74,9 +77,13 @@ export const Filters = ({
             </Select>
           </div>
           <div>
-            <Label htmlFor="date-range">Дата объявления</Label>
-            <Select>
-              <SelectTrigger id="date-range">
+            <Label htmlFor="filter-last-seen">Дата объявления</Label>
+            <Select
+              value={lastSeen}
+              onValueChange={onLastSeenChange}
+              defaultValue={lastSeen}
+            >
+              <SelectTrigger id="filter-last-seen">
                 <SelectValue placeholder="Выберите дату объявления" />
               </SelectTrigger>
               <SelectContent>
