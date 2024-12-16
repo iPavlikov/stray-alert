@@ -23,7 +23,7 @@ export const Report = memo(({ report }) => {
   });
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className="flex items-start gap-4">
       <Avatar className="h-12 w-12">
         <AvatarImage
           className="object-cover"
@@ -32,6 +32,7 @@ export const Report = memo(({ report }) => {
         />
         <AvatarFallback>{report.petName[0]}</AvatarFallback>
       </Avatar>
+
       <div>
         <p className="font-medium">
           {type} питомец: {report.petName}
@@ -40,6 +41,7 @@ export const Report = memo(({ report }) => {
         <p className="text-sm text-muted-foreground">
           Последний раз видели {lastSeenText}
         </p>
+        <p className="mt-2 text-sm whitespace-pre">{report.description}</p>
       </div>
     </div>
   );

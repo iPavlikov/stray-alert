@@ -1,8 +1,14 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { Input } from './input';
 
-export const FileUpload = ({ onChange, onValueChange, ...props }) => {
+export const FileUpload = ({
+  className,
+  onChange,
+  onValueChange,
+  ...props
+}) => {
   const handleChange = (e) => {
     onChange?.(e);
 
@@ -18,5 +24,12 @@ export const FileUpload = ({ onChange, onValueChange, ...props }) => {
     fileReader.readAsDataURL(file);
   };
 
-  return <Input {...props} onChange={handleChange} type="file" />;
+  return (
+    <Input
+      className={cn('cursor-pointer', className)}
+      {...props}
+      onChange={handleChange}
+      type="file"
+    />
+  );
 };

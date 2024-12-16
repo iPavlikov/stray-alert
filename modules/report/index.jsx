@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -35,6 +36,7 @@ const schema = z.object({
   photo: z.string().min(2),
   lastSeen: z.string().min(1),
   address: z.string().min(3),
+  description: z.string().min(3),
 });
 
 const resolver = zodResolver(schema);
@@ -46,6 +48,7 @@ const initialFormValues = {
   photo: '',
   lastSeen: '',
   address: '',
+  description: '',
 };
 
 export const ReportDialog = ({ children, description, title, type }) => {
@@ -91,32 +94,24 @@ export const ReportDialog = ({ children, description, title, type }) => {
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <form
-          className="grid gap-4 py-4"
-          onSubmit={form.handleSubmit(onSubmit)}
-        >
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="petName" className="text-right">
-              Имя питомца
-            </Label>
+        <form className="grid gap-4" onSubmit={form.handleSubmit(onSubmit)}>
+          <div>
+            <Label htmlFor="petName">Имя питомца</Label>
             <Controller
               control={form.control}
               name="petName"
-              render={({ field }) => (
-                <Input id="petName" className="col-span-3" {...field} />
-              )}
+              render={({ field }) => <Input id="petName" {...field} />}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="petType" className="text-right">
-              Тип
-            </Label>
+
+          <div>
+            <Label htmlFor="petType">Тип</Label>
             <Controller
               control={form.control}
               name="petType"
               render={({ field: { value, onChange } }) => (
                 <Select value={value} onValueChange={onChange}>
-                  <SelectTrigger id="petType" className="col-span-3">
+                  <SelectTrigger id="petType">
                     <SelectValue placeholder="Выберите тип" />
                   </SelectTrigger>
                   <SelectContent>
@@ -127,22 +122,18 @@ export const ReportDialog = ({ children, description, title, type }) => {
               )}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="breed" className="text-right">
-              Порода
-            </Label>
+
+          <div>
+            <Label htmlFor="breed">Порода</Label>
             <Controller
               control={form.control}
               name="breed"
-              render={({ field }) => (
-                <Input id="breed" className="col-span-3" {...field} />
-              )}
+              render={({ field }) => <Input id="breed" {...field} />}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="photo" className="text-right">
-              Фото
-            </Label>
+
+          <div>
+            <Label htmlFor="photo">Фото</Label>
             <Controller
               control={form.control}
               name="photo"
@@ -151,34 +142,25 @@ export const ReportDialog = ({ children, description, title, type }) => {
                   accept="image/png, image/jpeg, image/webp"
                   id="photo"
                   type="file"
-                  className="col-span-3"
                   onValueChange={onChange}
                 />
               )}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="lastSeen" className="text-right">
-              Последний раз видели
-            </Label>
+
+          <div>
+            <Label htmlFor="lastSeen">Последний раз видели</Label>
             <Controller
               control={form.control}
               name="lastSeen"
               render={({ field }) => (
-                <Input
-                  id="lastSeen"
-                  type="date"
-                  className="col-span-3"
-                  {...field}
-                />
+                <Input id="lastSeen" type="date" {...field} />
               )}
             />
           </div>
 
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="address" className="text-right">
-              Адрес
-            </Label>
+          <div>
+            <Label htmlFor="address">Адрес</Label>
             <Controller
               control={form.control}
               name="address"
@@ -188,17 +170,20 @@ export const ReportDialog = ({ children, description, title, type }) => {
                   handleGeoAutocomplete();
                 };
 
-                return (
-                  <Input
-                    id="address"
-                    type="text"
-                    className="col-span-3"
-                    onChange={onChange}
-                  />
-                );
+                return <Input id="address" type="text" onChange={onChange} />;
               }}
             />
           </div>
+
+          <div>
+            <Label htmlFor="description">Контакты</Label>
+            <Controller
+              control={form.control}
+              name="description"
+              render={({ field }) => <Textarea id="description" {...field} />}
+            />
+          </div>
+
           <DialogFooter>
             <Button disabled={!form.formState.isValid} type="submit">
               {form.formState.isSubmitting

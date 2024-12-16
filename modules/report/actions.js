@@ -19,6 +19,7 @@ export const createNotice = async (values) => {
       breed: values.breed,
       lastSeen: values.lastSeen,
       photo: values.photo,
+      description: values.description,
       location: [37.06738620638225, 55.85367530400972],
     };
     const data = [...savedData, notice];
