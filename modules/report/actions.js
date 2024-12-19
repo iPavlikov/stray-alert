@@ -2,6 +2,19 @@
 
 import { readFile, writeFile } from '@/lib/server-utils';
 
+const calculateCoordinates = (address) => {
+  const minifiedAddress = address.toLowerCase().replace(/[,\s]/g, '');
+
+  if (minifiedAddress === 'москвапятницкоешоссе16к5')
+    return [37.388128, 55.841698];
+
+  if (minifiedAddress === 'москвапятницкоешоссе15')
+    return [37.379186, 55.842565];
+
+  if (minifiedAddress === 'красногорсккрасногорскийбульвар36')
+    return [37.377489, 55.823874];
+};
+
 export const createNotice = async (values) => {
   try {
     const fileName = 'notices.json';
@@ -11,6 +24,7 @@ export const createNotice = async (values) => {
     const lastId = savedData.at(-1)?.id;
 
     const id = typeof lastId === 'number' ? lastId + 1 : 1;
+    const location = calculateCoordinates(values.address);
     const notice = {
       id,
       type: values.type,
@@ -20,7 +34,7 @@ export const createNotice = async (values) => {
       lastSeen: values.lastSeen,
       photo: values.photo,
       description: values.description,
-      location: [37.06738620638225, 55.85367530400972],
+      location,
     };
     const data = [...savedData, notice];
 
